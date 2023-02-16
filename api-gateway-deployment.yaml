@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api-gateway
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: api-gateway
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: api-gateway
+    spec:
+      containers:
+        - env:
+            - name: eureka.client.service-url.defaultZone
+              value: http://discovery-server:8761//eureka
+            - name: spring.cloud.gateway.routes[0].id
+              value: search-service
+            - name: spring.cloud.gateway.routes[0].predicates[0]
+              value: Path=/search/**
+            - name: spring.cloud.gateway.routes[0].uri
+              value: http://search-service:8090/
+            - name: spring.cloud.gateway.routes[1].id
+              value: booking-service
+            - name: spring.cloud.gateway.routes[1].predicates[0]
+              value: Path=/booking/**
+            - name: spring.cloud.gateway.routes[1].uri
+              value: http://booking-service:8060/
+            - name: spring.cloud.gateway.routes[2].id
+              value: fare-service
+            - name: spring.cloud.gateway.routes[2].predicates[0]
+              value: Path=/fare/**
+            - name: spring.cloud.gateway.routes[2].uri
+              value: http://fare-service:8081/
+            - name: spring.cloud.gateway.routes[3].id
+              value: user-service
+            - name: spring.cloud.gateway.routes[3].predicates[0]
+              value: Path=/home/**
+            - name: spring.cloud.gateway.routes[3].uri
+              value: http://user-service:8099/
+          image: sangameshwar18/gateway-microservice:1.0.0
+          name: api-gateway
+          ports:
+            - containerPort: 8089
+          resources: {}
+      restartPolicy: Always
+status: {}

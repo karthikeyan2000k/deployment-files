@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: discovery-server
+  name: discovery-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: discovery-server
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: discovery-server
+    spec:
+      containers:
+        - image: sangameshwar18/discovery-server:1.0.0
+          name: discovery-server
+          ports:
+            - containerPort: 8761
+          resources: {}
+      restartPolicy: Always
+status: {}
